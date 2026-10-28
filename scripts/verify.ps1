@@ -35,6 +35,7 @@ Write-Host ('  将重读 {0} 项' -f $plan.Count)
 Write-Host '  现在进下载模式：关机 -> 按住音量下 -> 插线 -> 7~10 秒' -ForegroundColor Yellow
 
 $log = Invoke-Spd -Tag 'verify' -Commands (@('path', $Verify) + $cmds + 'reset') -Wait $Wait
+if ($env:SPD_DRYRUN -eq '1') { Wait-Enter; return }
 
 Write-Host ''
 Write-Host '  --- 结果 ---'

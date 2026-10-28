@@ -18,6 +18,7 @@ Write-Host '  现在进下载模式：关机 -> 按住音量下 -> 插线 -> 保
 Write-Host ''
 
 $log = Invoke-Spd -Tag 'backup' -Commands @('path', $Dump, 'r', 'all', 'reset') -Wait $Wait
+if ($env:SPD_DRYRUN -eq '1') { Wait-Enter; return }
 
 # 收存工具目录里的 GPT / 分区表
 foreach ($pat in 'pgpt.bin', 'partition_*.xml') {
@@ -29,6 +30,11 @@ foreach ($pat in 'pgpt.bin', 'partition_*.xml') {
 $bins = Get-ChildItem $Dump -Filter *.bin -File
 Write-Host ''
 Write-Host ('  已落盘 {0} 个分区，共 {1:N2} GB' -f $bins.Count, (($bins | Measure-Object Length -Sum).Sum / 1GB))
+if ($bins.Count -lt 50) {
+    Write-Host '  [!] 只读到这么点，几乎肯定是连接/驱动问题，不是正常备份' -ForegroundColor Red
+    Write-Host '      先跑「2-连接诊断.bat」，并检查日志里有没有 Waiting for dl_diag connection' -ForegroundColor Red
+    Wait-Enter; exit 1
+}
 
 $csv = foreach ($f in $bins) {
     [pscustomobject]@{ 分区 = $f.BaseName; 字节 = $f.Length; sha256 = (Get-FileHash $f.FullName -Algorithm SHA256).Hash }
@@ -37,5 +43,5 @@ $csv | Export-Csv (Join-Path $Dump '备份清单.csv') -NoTypeInformation -Encod
 Write-Host ('  [OK] 清单：{0}' -f (Join-Path $Dump '备份清单.csv')) -ForegroundColor Green
 Write-Host ('  日志：{0}' -f $log)
 Write-Host ''
-Write-Host '  下一步：跑「3-校验备份.bat」，把关键分区再读一遍比对。' -ForegroundColor Cyan
+Write-Host '  下一步：跑「4-校验备份.bat」，把关键分区再读一遍比对。' -ForegroundColor Cyan
 Wait-Enter

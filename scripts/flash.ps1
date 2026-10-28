@@ -68,6 +68,7 @@ $log = Invoke-Spd -Tag ("flash_" + $Partition) -Commands @(
     'read_part', $Partition, '0', ('0x{0:X}' -f $len), $rbName,
     'reset'
 ) -Wait $Wait
+if ($env:SPD_DRYRUN -eq '1') { Wait-Enter; exit 0 }
 
 Write-Host ''
 Write-Host '  --- 读回校验 ---'

@@ -11,15 +11,15 @@ param()
 Show-Header '生成解锁镜像（magic64）'
 
 $src = Join-Path $Dump 'uboot_b.bin'
-if (-not (Test-Path $src)) { Write-Host ('  [X] 缺少 {0}，先跑「2-备份分区.bat」' -f $src) -ForegroundColor Red; Wait-Enter; exit 1 }
+if (-not (Test-Path $src)) { Write-Host ('  [X] 缺少 {0}，先跑「3-备份分区.bat」' -f $src) -ForegroundColor Red; Wait-Enter; exit 1 }
 
-$py = Get-Command python -ErrorAction SilentlyContinue
-if (-not $py) { Write-Host '  [X] 找不到 python，请先安装 Python 3' -ForegroundColor Red; Wait-Enter; exit 1 }
+$py = Get-PythonPath
+if (-not $py) { Write-Host '  [X] 找不到 Python 3（安装时请勾选 Add to PATH）' -ForegroundColor Red; Wait-Enter; exit 1 }
 
 $builder = Join-Path $PackRoot 'magic64\build_unlock_image.py'
 $outImg = Join-Path $Out 'uboot_b_magic64.img'
 
-& $py.Source $builder --input $src --output $outImg
+& $py.Exe @($py.Args) $builder --input $src --output $outImg
 $code = $LASTEXITCODE
 Write-Host ''
 if ($code -ne 0) {
@@ -31,5 +31,5 @@ if ($code -ne 0) {
 Write-Host ('  [OK] 已生成：{0}' -f $outImg) -ForegroundColor Green
 Write-Host ('  SHA256: {0}' -f (Get-Sha $outImg))
 Write-Host ''
-Write-Host '  下一步：跑「5-刷入解锁镜像.bat」' -ForegroundColor Cyan
+Write-Host '  下一步：跑「6-刷入解锁镜像.bat」' -ForegroundColor Cyan
 Wait-Enter

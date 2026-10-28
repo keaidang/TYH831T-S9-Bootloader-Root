@@ -10,7 +10,13 @@ param()
 Show-Header '安装 UNISOC 驱动'
 
 $drv = Join-Path $PackRoot 'driver\sprdvcom.inf'
-if (-not (Test-Path $drv)) { Write-Host '  [X] driver\sprdvcom.inf 缺失' -ForegroundColor Red; Wait-Enter; exit 1 }
+if (-not (Test-Path $drv)) {
+    Write-Host '  [提示] 本目录没有 driver\sprdvcom.inf（仓库版默认不带驱动）' -ForegroundColor Yellow
+    Write-Host '        可以：① 让 Windows 自动装（多数情况够用）'
+    Write-Host '              ② 用 Releases 里的完整离线包（自带驱动）'
+    Write-Host '              ③ 从设备厂商 / UNISOC 官方驱动包里取'
+    Write-Host ''
+}
 
 Write-Host '  Windows 10/11 首次插上手机时通常会自动装好。'
 Write-Host '  如果「2-连接诊断.bat」显示驱动没起来（黄色感叹号 / 错误码 10、28、31），按下面做：'
