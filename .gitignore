@@ -1,0 +1,19 @@
+# 第三方二进制与个人数据：不入库
+bin/
+driver/
+magisk/
+
+# 运行产物
+dump/
+out/
+logs/
+
+# 发布包
+*.zip
+*.7z
+*.apk
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store
