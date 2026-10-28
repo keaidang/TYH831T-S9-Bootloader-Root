@@ -13,6 +13,10 @@ logs/
 *.7z
 *.apk
 
+# Python
+__pycache__/
+*.pyc
+
 # 系统
 Thumbs.db
 desktop.ini
