@@ -12,7 +12,8 @@
   5-生成解锁镜像.bat    用你的原厂 uboot_b 生成 magic64 镜像
   6-刷入解锁镜像.bat    写 uboot_b → 解锁
   7-刷入root镜像.bat    写 boot_b  → root（把 Magisk 补丁好的 .img 拖到 bat 上）
-  8-回滚.bat            撤销解锁 / 撤销 root
+  8-回滚.bat            撤销解锁 / 撤销 root（只动 uboot_b / boot_b）
+  9-刷回已备份分区.bat   把 dump\ 里所有分区原样写回（完整恢复，慎用）
 
 进下载模式的手势（每一步都要）：
   手机完全关机 → 按住【音量下】不松手 → 插数据线 → 保持 7~10 秒 → 松手

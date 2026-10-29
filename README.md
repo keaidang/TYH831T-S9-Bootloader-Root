@@ -1,4 +1,4 @@
-# TYH831T（天翼铂顿 S9）Bootloader 解锁 + Root
+﻿# TYH831T（天翼铂顿 S9）Bootloader 解锁 + Root
 
 > 紫光展锐 UMS9620 · Android 13 · A/B 双槽 · **AP 侧解锁，不触碰 TEE / eFuse**
 >
@@ -123,7 +123,7 @@ magic64 的做法是**一个字节都不动签名覆盖区**：
 
 ```
 TYH831T-Bootloader-Unlock\
-├── 1-安装驱动.bat … 8-回滚.bat
+├── 1-安装驱动.bat … 9-刷回已备份分区.bat
 ├── scripts\      PowerShell 实现
 ├── magic64\      打包器
 ├── bin\          ← 你自己放：spd_dump.exe / Channel9.dll / Channel.ini /
@@ -159,6 +159,21 @@ TYH831T-Bootloader-Unlock\
 每步之间都要**彻底断电重进下载模式**：
 
 > 手机关机 → 按住【音量下】不松手 → 插数据线 → 保持 7~10 秒 → 松手（屏幕全黑正常）
+
+### 完整恢复（刷回已备份的分区）
+
+`9-刷回已备份分区.bat` 把 `dump\` 里**所有备份过的分区原样写回**，用于彻底回到备份时的状态。
+
+- 只写 `dump\` 里确实存在的分区，**不写 userdata**（当初就没备份）
+- 写入顺序按体积从小到大，`super` 放最后 —— 中途失败时关键分区已经回位
+- 写完自动回读 `splloader` / `uboot_a` / `uboot_b` / `boot_a` / `boot_b` / `vbmeta_*` / `miscdata` / `misc` 并比对 SHA256
+- 备份残缺（少于 50 个分区）时会强制二次确认
+
+只想恢复某几个分区：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\restore_all.ps1 -Only splloader,uboot_b,boot_b
+```
 
 ---
 
